@@ -5,17 +5,24 @@ using UnityEngine;
 public class gameBoundsSpawnerScript : MonoBehaviour
 {
     public GameObject gameBounds;
+    public GameObject tetromino;
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(gameBounds, new Vector3(0, 0, 1), transform.rotation);
+        GameObject spawnedBounds = Instantiate(gameBounds, new Vector3(0, 0, 1), transform.rotation);
 
-        float screenHeight = Screen.height;
-        float objectHeight = gameBounds.GetComponent<Renderer>().bounds.size.y;
-        float scaleFactor = screenHeight / objectHeight;
+        // calculate width
+        float newWidth = tetromino.GetComponent<Renderer>().bounds.size.x * 10;
+        Vector3 newScale = spawnedBounds.transform.localScale;
+        newScale.x = newWidth;
 
-        Vector3 originalScale = gameBounds.transform.localScale;
-        gameBounds.transform.localScale = new Vector3(originalScale.x * 3F, originalScale.y * scaleFactor, originalScale.z);
+        //calculate height
+        Camera mainCamera = Camera.main;
+        float screenHeightWorldSpace = mainCamera.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
+        newScale.y = screenHeightWorldSpace * 2;
+        
+
+        spawnedBounds.transform.localScale = newScale;
     }
 
     // Update is called once per frame

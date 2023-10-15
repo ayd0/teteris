@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class tetrominoMovementScript : MonoBehaviour
@@ -28,7 +29,7 @@ public class tetrominoMovementScript : MonoBehaviour
             {
                 gameObject.transform.position += new Vector3(0, -logicScript.tetrominoBounds.y, 0);
                 logicScript.lastPos = gameObject.transform.position;
-                Debug.Log(gameObject.transform.position);
+                Debug.Log(spawnerScript.tetrominoList.Min(el => el.transform.position.y));
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
