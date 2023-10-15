@@ -14,12 +14,21 @@ public class tetrominoSpawnerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Renderer tetrominoRenderer = tetromino.GetComponent<Renderer>();
         logicObject = GameObject.FindGameObjectWithTag("TetrominoLogicObject");
         logicScript = logicObject.GetComponent<tetrominoLogicScript>();
 
-        logicScript.tetrominoBounds = tetromino.GetComponent<Renderer>().bounds.size;
-        float posX = tetromino.GetComponent<Renderer>().bounds.size.x / 2;
-        instantiateTetromino(new Vector3(posX, 0, 0));
+        // calculate posX
+        logicScript.tetrominoBounds = tetrominoRenderer.bounds.size;
+        float posX = tetrominoRenderer.bounds.size.x / 2;
+
+        // calculate posY
+        Camera mainCamera = Camera.main;
+        float posY = mainCamera.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
+        posY -= tetrominoRenderer.bounds.size.y / 2 + tetrominoRenderer.bounds.size.y;
+
+
+        instantiateTetromino(new Vector3(posX, posY, 0));
     }
 
     // Update is called once per frame

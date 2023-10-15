@@ -9,16 +9,18 @@ public class gameBoundsSpawnerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Renderer tetrominoRenderer = tetromino.GetComponent<Renderer>();
         GameObject spawnedBounds = Instantiate(gameBounds, new Vector3(0, 0, 1), transform.rotation);
 
         // calculate width
-        float newWidth = tetromino.GetComponent<Renderer>().bounds.size.x * 10;
+        float newWidth = tetrominoRenderer.bounds.size.x * 10;
         Vector3 newScale = spawnedBounds.transform.localScale;
         newScale.x = newWidth;
 
         //calculate height
         Camera mainCamera = Camera.main;
         float screenHeightWorldSpace = mainCamera.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
+        screenHeightWorldSpace -= tetrominoRenderer.bounds.size.y;
         newScale.y = screenHeightWorldSpace * 2;
         
 
