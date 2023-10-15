@@ -8,6 +8,7 @@ public class tetrominoMovementScript : MonoBehaviour
     private tetrominoLogicScript logicScript;
     private GameObject tSpawnerObject;
     private tetrominoSpawnerScript spawnerScript;
+    public GameObject gameBounds;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,7 @@ public class tetrominoMovementScript : MonoBehaviour
             {
                 gameObject.transform.position += new Vector3(0, -logicScript.tetrominoBounds.y, 0);
                 logicScript.lastPos = gameObject.transform.position;
+                Debug.Log(gameObject.transform.position);
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
