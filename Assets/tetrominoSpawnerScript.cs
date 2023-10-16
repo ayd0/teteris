@@ -24,8 +24,9 @@ public class tetrominoSpawnerScript : MonoBehaviour
 
         // calculate posY
         Camera mainCamera = Camera.main;
+        float tetroSizeY = tetrominoRenderer.bounds.size.y;
         float posY = mainCamera.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
-        posY -= tetrominoRenderer.bounds.size.y / 2 + tetrominoRenderer.bounds.size.y;
+        posY -= tetroSizeY / 2 + tetroSizeY;
 
 
         instantiateTetromino(new Vector3(posX, posY, 0));

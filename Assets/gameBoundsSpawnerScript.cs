@@ -5,12 +5,13 @@ using UnityEngine;
 public class gameBoundsSpawnerScript : MonoBehaviour
 {
     public GameObject gameBounds;
+    private GameObject spawnedBounds;
     public GameObject tetromino;
     // Start is called before the first frame update
     void Start()
     {
         Renderer tetrominoRenderer = tetromino.GetComponent<Renderer>();
-        GameObject spawnedBounds = Instantiate(gameBounds, new Vector3(0, 0, 1), transform.rotation);
+        spawnedBounds = Instantiate(gameBounds, new Vector3(0, 0, 1), transform.rotation);
 
         // calculate width
         float newWidth = tetrominoRenderer.bounds.size.x * 10;
@@ -22,7 +23,6 @@ public class gameBoundsSpawnerScript : MonoBehaviour
         float screenHeightWorldSpace = mainCamera.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
         screenHeightWorldSpace -= tetrominoRenderer.bounds.size.y;
         newScale.y = screenHeightWorldSpace * 2;
-        
 
         spawnedBounds.transform.localScale = newScale;
     }
@@ -31,5 +31,13 @@ public class gameBoundsSpawnerScript : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public Vector4 getPlayArea()
+    {
+        Renderer renderer = spawnedBounds.GetComponent<Renderer>();
+        float posLeft = -(renderer.bounds.size.x / 2);
+        float posDown = -(renderer.bounds.size.y / 2);
+        return new Vector3(posLeft, -posLeft, posDown);
     }
 }

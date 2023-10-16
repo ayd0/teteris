@@ -10,6 +10,8 @@ public class tetrominoMovementScript : MonoBehaviour
     private GameObject tSpawnerObject;
     private tetrominoSpawnerScript spawnerScript;
     public GameObject gameBounds;
+    public GameObject gameBoundsSpawner;
+    public gameBoundsSpawnerScript gbSpawnerScript;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +20,8 @@ public class tetrominoMovementScript : MonoBehaviour
         logicScript = logicObject.GetComponent<tetrominoLogicScript>();
         tSpawnerObject = GameObject.FindGameObjectWithTag("TetrominoSpawnerObject");
         spawnerScript = tSpawnerObject.GetComponent<tetrominoSpawnerScript>();
+        gameBoundsSpawner = GameObject.FindGameObjectWithTag("GameBoundsSpawnerObject");
+        gbSpawnerScript = gameBoundsSpawner.GetComponent<gameBoundsSpawnerScript>();
     }
 
     // Update is called once per frame
@@ -27,20 +31,46 @@ public class tetrominoMovementScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                gameObject.transform.position += new Vector3(0, -logicScript.tetrominoBounds.y, 0);
-                logicScript.lastPos = gameObject.transform.position;
-                Debug.Log(spawnerScript.tetrominoList.Min(el => el.transform.position.y));
+                Renderer tRenderer = gameObject.GetComponent<Renderer>();
+                Vector3 playArea = gbSpawnerScript.getPlayArea();
+                float lowestY = spawnerScript.tetrominoList.Min(el => el.transform.position.y) - tRenderer.bounds.size.y / 2;
+
+                if (!detectBoundsCollision(playArea.z, lowestY, tRenderer.GetComponent<Renderer>().bounds.size.y))
+                {
+                    gameObject.transform.position += new Vector3(0, -logicScript.tetrominoBounds.y, 0);
+                    logicScript.lastPos = gameObject.transform.position;
+                }
+
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                gameObject.transform.position += new Vector3(-logicScript.tetrominoBounds.x, 0, 0);
-                logicScript.lastPos = gameObject.transform.position;
+                Renderer tRenderer = gameObject.GetComponent<Renderer>();
+                Vector3 playArea = gbSpawnerScript.getPlayArea();
+                float lowestX = spawnerScript.tetrominoList.Min(el => el.transform.position.x) - tRenderer.bounds.size.x / 2;
+
+                if (!detectBoundsCollision(playArea.x, lowestX, tRenderer.GetComponent<Renderer>().bounds.size.x))
+                {
+                    gameObject.transform.position += new Vector3(-logicScript.tetrominoBounds.x, 0, 0);
+                    logicScript.lastPos = gameObject.transform.position;
+                }
             }
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                gameObject.transform.position += new Vector3(logicScript.tetrominoBounds.x, 0, 0);
-                logicScript.lastPos = gameObject.transform.position;
+                Renderer tRenderer = gameObject.GetComponent<Renderer>();
+                Vector3 playArea = gbSpawnerScript.getPlayArea();
+                float highestX = spawnerScript.tetrominoList.Max(el => el.transform.position.x) - tRenderer.bounds.size.x / 2;
+
+                if (!detectBoundsCollision(playArea.x, -highestX, tRenderer.GetComponent<Renderer>().bounds.size.x))
+                {
+                    gameObject.transform.position += new Vector3(logicScript.tetrominoBounds.x, 0, 0);
+                    logicScript.lastPos = gameObject.transform.position;
+                }
             }
         }
+    }
+
+    private bool detectBoundsCollision(float bounds, float pos, float tetro)
+    {
+        return (Mathf.Abs(bounds - pos) < tetro);
     }
 }
