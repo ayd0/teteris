@@ -37,7 +37,11 @@ public class gameBoundsSpawnerScript : MonoBehaviour
     {
         Renderer renderer = spawnedBounds.GetComponent<Renderer>();
         float posLeft = -(renderer.bounds.size.x / 2);
-        float posDown = -(renderer.bounds.size.y / 2);
-        return new Vector3(posLeft, -posLeft, posDown);
+        float posUp = (renderer.bounds.size.y / 2);
+        return new Vector4(posLeft, posUp, -posLeft, -posUp);
+    }
+    public bool detectBoundsCollision(float bounds, float pos, float tetro)
+    {
+        return (Mathf.Abs(bounds - pos) < tetro);
     }
 }

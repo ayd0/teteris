@@ -7,6 +7,8 @@ public class tetrominoSpawnerScript : MonoBehaviour
 {
     private GameObject logicObject;
     private tetrominoLogicScript logicScript;
+    public GameObject gameBoundsSpawner;
+    public gameBoundsSpawnerScript gbSpawnerScript;
     public GameObject tetromino;
     public KeyCode buildModifierKey = KeyCode.LeftShift;
     public List<GameObject> tetrominoList = new List<GameObject>();
@@ -18,6 +20,9 @@ public class tetrominoSpawnerScript : MonoBehaviour
         logicObject = GameObject.FindGameObjectWithTag("TetrominoLogicObject");
         logicScript = logicObject.GetComponent<tetrominoLogicScript>();
 
+        gameBoundsSpawner = GameObject.FindGameObjectWithTag("GameBoundsSpawnerObject");
+        gbSpawnerScript = gameBoundsSpawner.GetComponent<gameBoundsSpawnerScript>();
+
         // calculate posX
         logicScript.tetrominoBounds = tetrominoRenderer.bounds.size;
         float posX = tetrominoRenderer.bounds.size.x / 2;
@@ -28,7 +33,6 @@ public class tetrominoSpawnerScript : MonoBehaviour
         float posY = mainCamera.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
         posY -= tetroSizeY / 2 + tetroSizeY;
 
-
         instantiateTetromino(new Vector3(posX, posY, 0));
     }
 
@@ -38,25 +42,39 @@ public class tetrominoSpawnerScript : MonoBehaviour
         if (Input.GetKey(buildModifierKey))
         {
             Vector3 spawnCoords = logicScript.lastPos;
+            Vector4 playArea = gbSpawnerScript.getPlayArea();
+            Renderer tetrominoRenderer = tetromino.GetComponent<Renderer>();
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                spawnCoords += new Vector3(-logicScript.tetrominoBounds.x, 0, 0);
-                instantiateTetromino(spawnCoords);
+                if (!(spawnCoords.x - tetrominoRenderer.bounds.size.x < playArea.x))
+                {
+                    spawnCoords += new Vector3(-logicScript.tetrominoBounds.x, 0, 0);
+                    instantiateTetromino(spawnCoords);
+                }
             }
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                spawnCoords += new Vector3(logicScript.tetrominoBounds.x, 0, 0);
-                instantiateTetromino(spawnCoords);
+                if ((spawnCoords.x + tetrominoRenderer.bounds.size.x < playArea.z))
+                {
+                    spawnCoords += new Vector3(logicScript.tetrominoBounds.x, 0, 0);
+                    instantiateTetromino(spawnCoords);
+                }
             }
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                spawnCoords += new Vector3(0, logicScript.tetrominoBounds.y, 0);
-                instantiateTetromino(spawnCoords);
+                if ((spawnCoords.y + tetrominoRenderer.bounds.size.y < playArea.y))
+                {
+                    spawnCoords += new Vector3(0, logicScript.tetrominoBounds.y, 0);
+                    instantiateTetromino(spawnCoords);
+                }
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                spawnCoords += new Vector3(0, -logicScript.tetrominoBounds.y, 0);
-                instantiateTetromino(spawnCoords);
+                if (!(spawnCoords.y - tetrominoRenderer.bounds.size.y < playArea.w))
+                {
+                    spawnCoords += new Vector3(0, -logicScript.tetrominoBounds.y, 0);
+                    instantiateTetromino(spawnCoords);
+                }
             }
         }
     }
