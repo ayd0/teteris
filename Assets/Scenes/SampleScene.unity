@@ -197,9 +197,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0196d61188e64384fad90a8f891f0bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameBoundsSpawner: {fileID: 0}
+  gbSpawnerScript: {fileID: 0}
   tetromino: {fileID: 4695781267289965425, guid: fa4adfea17f115f40a8cfee806825516, type: 3}
   buildModifierKey: 304
   tetrominoList: []
+  tetrominoParent: {fileID: 0}
 --- !u!4 &258800879
 Transform:
   m_ObjectHideFlags: 0
@@ -405,6 +408,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 148574787}
-  - {fileID: 258800879}
   - {fileID: 2041209039}
   - {fileID: 385661961}
+  - {fileID: 258800879}

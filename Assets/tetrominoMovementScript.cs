@@ -13,10 +13,12 @@ public class tetrominoMovementScript : MonoBehaviour
     public GameObject gameBounds;
     public GameObject gameBoundsSpawner;
     public gameBoundsSpawnerScript gbSpawnerScript;
+    public GameObject tetromino;
 
     // Start is called before the first frame update
     void Start()
     {
+        tetromino = Resources.Load<GameObject>("Prefabs/Tetromino");
         logicObject = GameObject.FindGameObjectWithTag("TetrominoLogicObject");
         logicScript = logicObject.GetComponent<tetrominoLogicScript>();
         tSpawnerObject = GameObject.FindGameObjectWithTag("TetrominoSpawnerObject");
@@ -32,23 +34,20 @@ public class tetrominoMovementScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                Renderer tRenderer = gameObject.GetComponent<Renderer>();
+                Renderer tRenderer = tetromino.GetComponent<Renderer>();
                 Vector4 playArea = gbSpawnerScript.getPlayArea();
                 float lowestX = spawnerScript.tetrominoList.Min(el => el.transform.position.x) - tRenderer.bounds.size.x / 2;
 
-                if (!gbSpawnerScript.detectBoundsCollision(playArea.x, lowestX, tRenderer.GetComponent<Renderer>().bounds.size.x))
-                {
-                    gameObject.transform.position += new Vector3(-logicScript.tetrominoBounds.x, 0, 0);
-                    logicScript.lastPos = gameObject.transform.position;
-                }
+                gameObject.transform.position += new Vector3(-logicScript.tetrominoBounds.x, 0, 0);
+                logicScript.lastPos = gameObject.transform.position;
             }
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                Renderer tRenderer = gameObject.GetComponent<Renderer>();
+                Renderer tRenderer = tetromino.GetComponent<Renderer>();
                 Vector4 playArea = gbSpawnerScript.getPlayArea();
                 float highestX = spawnerScript.tetrominoList.Max(el => el.transform.position.x) - tRenderer.bounds.size.x / 2;
 
-                if (!gbSpawnerScript.detectBoundsCollision(playArea.z, highestX, tRenderer.GetComponent<Renderer>().bounds.size.x))
+                if (!(highestX + tRenderer.bounds.size.y > playArea.z))
                 {
                     gameObject.transform.position += new Vector3(logicScript.tetrominoBounds.x, 0, 0);
                     logicScript.lastPos = gameObject.transform.position;
@@ -56,16 +55,23 @@ public class tetrominoMovementScript : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                Renderer tRenderer = gameObject.GetComponent<Renderer>();
+                Renderer tRenderer = tetromino.GetComponent<Renderer>();
+                Debug.Log(tRenderer);
                 Vector4 playArea = gbSpawnerScript.getPlayArea();
                 float lowestY = spawnerScript.tetrominoList.Min(el => el.transform.position.y) - tRenderer.bounds.size.y / 2;
 
-                if (!gbSpawnerScript.detectBoundsCollision(playArea.w, lowestY, tRenderer.GetComponent<Renderer>().bounds.size.y))
-                {
-                    gameObject.transform.position += new Vector3(0, -logicScript.tetrominoBounds.y, 0);
-                    logicScript.lastPos = gameObject.transform.position;
-                }
+                gameObject.transform.position += new Vector3(0, -logicScript.tetrominoBounds.y, 0);
+                logicScript.lastPos = gameObject.transform.position;
+            }
+            // Delete for Build
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                Renderer tRenderer = tetromino.GetComponent<Renderer>();
+                Vector4 playArea = gbSpawnerScript.getPlayArea();
+                float lowestY = spawnerScript.tetrominoList.Min(el => el.transform.position.y) - tRenderer.bounds.size.y / 2;
 
+                gameObject.transform.position += new Vector3(0, logicScript.tetrominoBounds.y, 0);
+                logicScript.lastPos = gameObject.transform.position;
             }
         }
     }

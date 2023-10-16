@@ -13,6 +13,8 @@ public class tetrominoSpawnerScript : MonoBehaviour
     public KeyCode buildModifierKey = KeyCode.LeftShift;
     public List<GameObject> tetrominoList = new List<GameObject>();
 
+    public GameObject tetrominoParent;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,9 @@ public class tetrominoSpawnerScript : MonoBehaviour
         float tetroSizeY = tetrominoRenderer.bounds.size.y;
         float posY = mainCamera.ScreenToWorldPoint(new Vector3(0, Screen.height, 0)).y;
         posY -= tetroSizeY / 2 + tetroSizeY;
+
+        tetrominoParent = new GameObject("TetrominoParent");
+        tetrominoMovementScript tetrominoMovementScript = tetrominoParent.AddComponent<tetrominoMovementScript>();
 
         instantiateTetromino(new Vector3(posX, posY, 0));
     }
@@ -81,7 +86,9 @@ public class tetrominoSpawnerScript : MonoBehaviour
 
     void instantiateTetromino(Vector3 spawnCoords)
     {
-        tetrominoList.Add(Instantiate(tetromino, spawnCoords, transform.rotation));
+        GameObject newTetromino = Instantiate(tetromino, spawnCoords, transform.rotation);
+        newTetromino.transform.SetParent(tetrominoParent.transform);
+        tetrominoList.Add(newTetromino);
         logicScript.lastPos = spawnCoords;
     }
 }

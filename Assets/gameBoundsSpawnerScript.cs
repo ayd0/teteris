@@ -40,8 +40,4 @@ public class gameBoundsSpawnerScript : MonoBehaviour
         float posUp = (renderer.bounds.size.y / 2);
         return new Vector4(posLeft, posUp, -posLeft, -posUp);
     }
-    public bool detectBoundsCollision(float bounds, float pos, float tetro)
-    {
-        return (Mathf.Abs(bounds - pos) < tetro);
-    }
 }
